@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOREX CHECKLIST</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f5f5f5; font-family: 'Inter', sans-serif; font-size: 15px; color: #111; }
+.container { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #e0e0e0; }
+.logo { font-size: 20px; font-weight: 700; color: #111; letter-spacing: -0.3px; }
+.logo span { color: #888; font-weight: 400; }
+#clock { font-size: 18px; font-weight: 600; color: #111; font-variant-numeric: tabular-nums; }
+.card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+.card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #888; margin-bottom: 1.25rem; }
+.pw-label { font-size: 13px; font-weight: 600; color: #444; display: block; margin-bottom: 5px; }
+input[type=password] { width: 100%; border: 1.5px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: 'Inter', sans-serif; color: #111; outline: none; transition: border-color 0.15s; background: #fff; }
+input[type=password]:focus { border-color: #111; }
+.dir-select { display: flex; gap: 8px; margin: 1.25rem 0; }
+.dir-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1.5px solid #ddd; background: #fff; color: #555; font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.15s; }
+.dir-btn:hover { border-color: #aaa; color: #111; background: #f9f9f9; }
+.dir-btn.active-long { background: #2e7d32; border-color: #2e7d32; color: #fff; }
+.dir-btn.active-short { background: #c62828; border-color: #c62828; color: #fff; }
+.upload-area { border: 2px dashed #ccc; border-radius: 12px; padding: 2rem; text-align: center; cursor: pointer; background: #fafafa; position: relative; transition: all 0.2s; }
+.upload-area:hover { border-color: #666; background: #f5f5f5; }
+.upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; font-size: 0; }
+.upload-icon { font-size: 30px; margin-bottom: 8px; }
+.upload-label { font-size: 15px; color: #333; font-weight: 500; }
+.upload-label strong { color: #111; }
+.upload-hint { font-size: 12px; color: #888; margin-top: 4px; }
+.preview-wrap { position: relative; margin-bottom: 1rem; }
+.preview-wrap img { width: 100%; border-radius: 8px; border: 1px solid #ddd; display: block; }
+.remove-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.95); border: 1px solid #ccc; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; color: #555; line-height: 1; }
+.info-box { background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #555; margin-bottom: 10px; }
+.btn-analyze { width: 100%; padding: 13px; border-radius: 8px; border: none; background: #111; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.15s; }
+.btn-analyze:hover { background: #333; }
+.btn-analyze:disabled { background: #aaa; cursor: not-allowed; }
+.ai-rules { border-top: 1px solid #e0e0e0; padding-top: 1rem; margin-top: 1rem; }
+.ai-rule { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+.ai-rule:last-child { border-bottom: none; }
+.ai-rule-icon { font-size: 16px; font-weight: 700; width: 20px; flex-shrink: 0; margin-top: 1px; }
+.ai-rule-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.ai-rule-note { font-size: 13px; color: #555; line-height: 1.5; }
+.verdict { margin-top: 1rem; padding: 13px 16px; border-radius: 8px; font-size: 15px; font-weight: 700; }
+.verdict.long { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.verdict.short-v { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+.verdict.no { background: #fff8e1; color: #e65100; border: 1px solid #ffe082; }
+.ai-summary { font-size: 13px; color: #555; margin-top: 8px; line-height: 1.6; }
+.err-msg { font-size: 13px; color: #c62828; background: #ffebee; border-radius: 8px; padding: 10px 14px; margin-top: 8px; border: 1px solid #ef9a9a; }
+.loading-wrap { text-align: center; padding: 1.5rem; color: #888; font-size: 14px; }
+.spinner { width: 22px; height: 22px; border: 2px solid #ddd; border-top-color: #111; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+footer { text-align: center; font-size: 11px; color: #bbb; padding-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">FOREX<span>/</span>CHECKLIST</div>
+    <div id="clock">--:--:--</div>
+  </header>
+
+  <div class="card">
+    <div class="card-title">AI analýza grafu</div>
+
+    <label class="pw-label">Přístupové heslo</label>
+    <input type="password" id="appPassword" placeholder="Zadej heslo...">
+
+    <div class="dir-select">
+      <button class="dir-btn" id="dirLong" onclick="setDir('long')">▲ LONG setup</button>
+      <button class="dir-btn" id="dirShort" onclick="setDir('short')">▼ SHORT setup</button>
+    </div>
+
+    <div id="uploadSection">
+      <div class="upload-area">
+        <input type="file" accept="image/*" id="fileInput" onchange="handleFile(event)">
+        <div class="upload-icon">📊</div>
+        <div class="upload-label">Přetáhni screenshot nebo <strong>klikni pro výběr</strong></div>
+        <div class="upload-hint">PNG, JPG · graf s EMA 17, EMA 63, CCI 17, CCI 63</div>
+      </div>
+    </div>
+
+    <div id="previewSection" style="display:none;">
+      <div class="preview-wrap">
+        <img id="previewImg" src="" alt="Graf">
+        <button class="remove-btn" onclick="removeImage()">×</button>
+      </div>
+      <div class="info-box" id="infoBox">Vyber Long nebo Short setup výše.</div>
+      <button class="btn-analyze" id="analyzeBtn" onclick="analyzeChart()">Analyzovat graf</button>
+      <div id="statusMsg"></div>
+    </div>
+
+    <div id="aiResult"></div>
+  </div>
+
+  <footer>EMA 17/63 · CCI 17/63 · v1.0</footer>
+</div>
+<script>
+let selectedDir = null, imageBase64 = null, imageMime = 'image/jpeg';
+
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('cs-CZ', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+updateClock(); setInterval(updateClock, 1000);
+
+function setDir(d) {
+  selectedDir = d;
+  document.getElementById('dirLong').className = 'dir-btn' + (d==='long' ? ' active-long' : '');
+  document.getElementById('dirShort').className = 'dir-btn' + (d==='short' ? ' active-short' : '');
+  updateInfoBox();
+}
+
+function updateInfoBox() {
+  const box = document.getElementById('infoBox');
+  if (!selectedDir) { box.innerHTML = 'Vyber Long nebo Short setup výše.'; return; }
+  box.innerHTML = `Zkontroluju <strong style="color:${selectedDir==='long'?'#2e7d32':'#c62828'}">${selectedDir.toUpperCase()} setup</strong> — vyhodnotím všechna 4 pravidla.`;
+}
+
+function handleFile(e) {
+  const file = e.target.files[0]; if (!file) return;
+  imageMime = ['image/jpeg','image/png','image/gif','image/webp'].includes(file.type) ? file.type : 'image/jpeg';
+  const reader = new FileReader();
+  reader.onload = ev => {
+    imageBase64 = ev.target.result.split(',')[1];
+    document.getElementById('previewImg').src = ev.target.result;
+    document.getElementById('uploadSection').style.display = 'none';
+    document.getElementById('previewSection').style.display = 'block';
+    document.getElementById('aiResult').innerHTML = '';
+    document.getElementById('statusMsg').innerHTML = '';
+    updateInfoBox();
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage() {
+  imageBase64 = null;
+  document.getElementById('fileInput').value = '';
+  document.getElementById('uploadSection').style.display = 'block';
+  document.getElementById('previewSection').style.display = 'none';
+  document.getElementById('aiResult').innerHTML = '';
+  document.getElementById('statusMsg').innerHTML = '';
+}
+
+async function analyzeChart() {
+  if (!imageBase64) { showStatus('Nejprve nahraj obrázek grafu.', true); return; }
+  if (!selectedDir) { showStatus('Vyber Long nebo Short setup.', true); return; }
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true; btn.textContent = 'Analyzuji...';
+  document.getElementById('aiResult').innerHTML = '<div class="loading-wrap"><div class="spinner"></div>AI analyzuje graf...</div>';
+  showStatus('', false);
+  const dir = selectedDir;
+  const prompt = `Jsi expert na technickou analýzu forexu. Analyzuj tento graf a zkontroluj pravidla pro ${dir.toUpperCase()} setup.\n\nPRAVIDLA PRO ${dir.toUpperCase()}:\n${dir==='long'?'1. EMA 17 je NAD EMA 63\n2. Cena zkorigovala zpět k EMA 63 po pohybu nahoru\n3. CCI 63 je mezi -80 a +80\n4. CCI 17 je pod -80':'1. EMA 17 je POD EMA 63\n2. Cena zkorigovala zpět k EMA 63 po pohybu dolů\n3. CCI 63 je mezi -80 a +80\n4. CCI 17 je nad +80'}\n\nOdpověz POUZE validním JSON objektem, bez textu před ani za, bez backticks:\n{"rules":[{"id":1,"name":"EMA 17 vs EMA 63","ok":true,"note":"popis"},{"id":2,"name":"Korekce k EMA 63","ok":true,"note":"popis"},{"id":3,"name":"CCI 63 v zóně ±80","ok":true,"note":"popis"},{"id":4,"name":"CCI 17 ${dir==='long'?'pod -80':'nad +80'}","ok":true,"note":"popis"}],"verdict":"${dir}","summary":"shrnutí"}\n\nMožné hodnoty verdict: "long", "short", "no_entry"`;
+  try {
+    const resp = await fetch('https://forexchecker.snydr-jirka.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password: document.getElementById('appPassword').value,
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: [
+          { type: 'image', source: { type: 'base64', media_type: imageMime, data: imageBase64 } },
+          { type: 'text', text: prompt }
+        ]}]
+      })
+    });
+    if (!resp.ok) { const err = await resp.json().catch(()=>({})); throw new Error(err.error?.message || `HTTP ${resp.status}`); }
+    const data = await resp.json();
+    const raw = (data.content||[]).map(i=>i.text||'').join('').trim();
+    const match = raw.match(/\{[\s\S]*\}/);
+    renderAiResult(JSON.parse(match ? match[0] : raw));
+  } catch(err) {
+    document.getElementById('aiResult').innerHTML = '';
+    showStatus('Chyba: ' + err.message, true);
+  }
+  btn.disabled = false; btn.textContent = 'Analyzovat graf';
+}
+
+function showStatus(msg, isError) {
+  document.getElementById('statusMsg').innerHTML = msg ? `<div class="${isError?'err-msg':''}" style="padding:8px 0;font-size:13px;color:#555;">${msg}</div>` : '';
+}
+
+function renderAiResult(result) {
+  const rules = (result.rules||[]).map(r => `
+    <div class="ai-rule">
+      <div class="ai-rule-icon" style="color:${r.ok?'#2e7d32':'#c62828'}">${r.ok?'✓':'✗'}</div>
+      <div>
+        <div class="ai-rule-title" style="color:${r.ok?'#2e7d32':'#c62828'}">${r.name}</div>
+        <div class="ai-rule-note">${r.note||''}</div>
+      </div>
+    </div>`).join('');
+  const v = {long:{cls:'long',txt:'✓ VSTUP POVOLEN — LONG'},short:{cls:'short-v',txt:'✓ VSTUP POVOLEN — SHORT'},no_entry:{cls:'no',txt:'✗ NEVSTUPOVAT'}};
+  const vd = v[result.verdict]||v.no_entry;
+  document.getElementById('aiResult').innerHTML = `
+    <div class="ai-rules">${rules}</div>
+    <div class="verdict ${vd.cls}">${vd.txt}</div>
+    ${result.summary?`<div class="ai-summary">${result.summary}</div>`:''}`;
+}
+</script>
+</body>
+</html>
